@@ -1,8 +1,8 @@
 import math
 
 #screen settings
-RESOLUTION = WIDTH, HEIGHT = 2500, 1400
-FPS = 10
+RESOLUTION = WIDTH, HEIGHT = 1200, 700
+FPS = 60
 
 #raycasting settings
 FOV = math.pi / 3

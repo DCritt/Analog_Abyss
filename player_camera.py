@@ -11,7 +11,7 @@ class PlayerCamera:
 
         curr_ray_angle = self.player.player_angle - (FOV / 2) + 0.0001
         for ray in range(RAY_AMT):
-            ray_depth = RayCasting.cast_ray(self.player.pos[0], self.player.pos[1], self.player.map_pos[0], self.player.map_pos[0], curr_ray_angle, MAX_DEPTH, self.game)
+            ray_depth = RayCasting.cast_ray(self.player.pos[0], self.player.pos[1], self.player.map_pos[0], self.player.map_pos[1], curr_ray_angle, MAX_DEPTH, self.game)
             pygame.draw.line(
                 self.game.screen, 
                 'yellow', 

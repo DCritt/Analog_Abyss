@@ -52,13 +52,13 @@ class Player:
             self.y += dy
 
     def draw(self):
-        pygame.draw.line(
-            self.game.screen, 
-            'green', 
-            (self.x * 100, self.y * 100), 
-            (self.x * 100 + WIDTH * math.cos(self.player_angle), self.y * 100 + WIDTH * math.sin(self.player_angle)),
-            2
-        )
+        #pygame.draw.line(
+        #   self.game.screen, 
+        #    'green', 
+        #    (self.x * 100, self.y * 100), 
+        #    (self.x * 100 + WIDTH * math.cos(self.player_angle), self.y * 100 + WIDTH * math.sin(self.player_angle)),
+        #    2
+        #)
         pygame.draw.circle(self.game.screen, 'blue', (self.x * 100, self.y * 100), 20)
 
     @property
