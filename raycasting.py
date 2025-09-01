@@ -3,19 +3,18 @@ from settings import *
 class RayCasting:
 
     @staticmethod
-    def cast_ray(x, y, map_x, map_y, angle, max_length, game):
+    def cast_ray(pos, map_pos, angle, max_length, map_dic):
         sin_angle = math.sin(angle)
         cos_angle = math.cos(angle)
 
         #horizonal raycast
 
         #determine which vertical direction the ray is going
-        map_y = math.floor(y)
-        hor_y, hor_dy = (map_y + 1, 1) if sin_angle > 0 else (map_y - 1e-6, -1)
+        hor_y, hor_dy = (map_pos[1] + 1, 1) if sin_angle > 0 else (map_pos[1] - 1e-6, -1)
 
         #find inital depth and first y intercept x coordinate
-        hor_depth = (hor_y - y) / sin_angle
-        hor_x = x + hor_depth * cos_angle
+        hor_depth = (hor_y - pos[1]) / sin_angle
+        hor_x = pos[0] + hor_depth * cos_angle
 
         #find the depth delta of every y intecept jump and the delta x of every jump
         hor_depth_delta = hor_dy / sin_angle
@@ -23,7 +22,7 @@ class RayCasting:
 
         while (hor_depth < max_length):
             hor_map_pos = int(hor_x), int(hor_y)
-            if (hor_map_pos in game.map.map_dic):
+            if (hor_map_pos in map_dic):
                break
             hor_x += hor_dx
             hor_y += hor_dy
@@ -35,11 +34,11 @@ class RayCasting:
         #vertical raycast
 
         #determine which vertical direction the ray is going
-        vert_x, vert_dx = (map_x + 1, 1) if cos_angle > 0 else (map_x - 1e-6, -1)
+        vert_x, vert_dx = (map_pos[0] + 1, 1) if cos_angle > 0 else (map_pos[0] - 1e-6, -1)
 
         #find inital depth and first x intercept y coordinate
-        vert_depth = (vert_x - x) / cos_angle
-        vert_y = y + vert_depth * sin_angle
+        vert_depth = (vert_x - pos[0]) / cos_angle
+        vert_y = pos[1] + vert_depth * sin_angle
 
         #find the depth delta of every x intecept jump and the delta y of every jump
         vert_depth_delta = vert_dx / cos_angle
@@ -47,7 +46,7 @@ class RayCasting:
 
         while (vert_depth < max_length):
             vert_map_pos = int(vert_x), int(vert_y)
-            if (vert_map_pos in game.map.map_dic):
+            if (vert_map_pos in map_dic):
                 break
             vert_x += vert_dx
             vert_y += vert_dy

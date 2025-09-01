@@ -10,7 +10,7 @@ class Player:
         self.player_angle = 0
         self.player_size = 60
         self.player_speed = .005
-        self.player_rotation_speed = 0.004
+        self.player_rotation_speed = 0.002
 
     def move_player(self):
         speed = self.player_speed * self.game.delta_time

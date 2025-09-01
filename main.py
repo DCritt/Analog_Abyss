@@ -26,8 +26,8 @@ class Game:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
-        self.map.draw()
-        self.player.draw()
+        #self.map.draw()
+        #self.player.draw()
         self.player_camera.ray_cast()
         
 
