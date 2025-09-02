@@ -1,6 +1,7 @@
 import pygame
 from raycasting import RayCasting
 from settings import *
+from concurrent.futures import ProcessPoolExecutor
 
 class PlayerCamera:
     def __init__(self, game, player):
@@ -10,6 +11,29 @@ class PlayerCamera:
     def ray_cast(self):
 
         curr_ray_angle = self.player.player_angle - (FOV / 2) + 0.0001
+
+        floor_segments = (HEIGHT // 2) / LIGHT_SEG_SIZE
+
+        for segment in range(int(floor_segments)):
+            floor_height_pixels = (HEIGHT // 2) + (segment * LIGHT_SEG_SIZE)
+            floor_segment_dist = (0.5 * SCREEN_DISTANCE) / ((floor_height_pixels - (HEIGHT // 2)) + 0.00001)
+
+            darkness_multiplier = 0.7
+
+            distance_multiplier = (1 - min(floor_segment_dist, MAX_DEPTH) / MAX_DEPTH)
+
+            center = (WIDTH // 2, HEIGHT //2)
+            location = (WIDTH // 2, floor_height_pixels)
+            distance = math.dist(center, location)
+
+            flashlight_multiplier = (max(((1 / darkness_multiplier) * ((1 / max(distance_multiplier, 0.5)))) * (max(0, 1 - (distance / (HEIGHT * .75)))), darkness_multiplier))
+
+            color = [255 * (darkness_multiplier * flashlight_multiplier * distance_multiplier)] * 3
+
+            print(floor_segment_dist, color)
+
+            pygame.draw.rect(self.game.screen, color, (0, floor_height_pixels, WIDTH, LIGHT_SEG_SIZE))
+
         for ray in range(RAY_AMT):
             ray_info = RayCasting.cast_ray(self.player.pos, self.player.map_pos, curr_ray_angle, MAX_DEPTH, self.game.map.map_dic)
 
@@ -23,8 +47,10 @@ class PlayerCamera:
                 darkness_multiplier = 0.7
 
                 distance_multiplier = (1 - ray_info[1] / MAX_DEPTH)
+                
+                #LIGHT_SEG_SIZE = int(projection_height / 8)
 
-                projection_height_segments = projection_height / 4
+                projection_height_segments = projection_height / LIGHT_SEG_SIZE
 
                 color = (0, 0, 0)
 
@@ -38,24 +64,25 @@ class PlayerCamera:
                     # dist_from_center_screen_vert = abs((((HEIGHT - projection_height) // 2) + (segment * 8)) - (HEIGHT // 2))
                     # flash_light_multiplier_vert = 1 + (3 * (1 - (dist_from_center_screen_vert / (HEIGHT // 2))))
 
-                    location = (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + segment * 4)
+                    location = (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + segment * LIGHT_SEG_SIZE)
                     distance = math.dist(center, location)
 
-                    flashlight_multiplier = (max(((1 / darkness_multiplier) * ((1 / max(distance_multiplier, 0.4)))) * (max(0, 1 - (distance / 450))), darkness_multiplier))
+                    flashlight_multiplier = (max(((1 / darkness_multiplier) * ((1 / max(distance_multiplier, 0.5)))) * (max(0, 1 - (distance / (HEIGHT * .75)))), darkness_multiplier))
 
                     color = [255 * (darkness_multiplier * flashlight_multiplier * distance_multiplier)] * 3
 
                     pygame.draw.rect(
                         self.game.screen,
                         color,
-                        (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + segment * 4, RAY_WIDTH_SCALE, 4)
+                        (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + segment * LIGHT_SEG_SIZE, RAY_WIDTH_SCALE, LIGHT_SEG_SIZE)
                     )
                     
                 pygame.draw.rect(
                     self.game.screen,
                     color,
-                    (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + (4 * int(projection_height_segments)), RAY_WIDTH_SCALE,  ((projection_height_segments) - int(projection_height_segments)) * 4)
+                    (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + (LIGHT_SEG_SIZE * int(projection_height_segments)), RAY_WIDTH_SCALE,  ((projection_height_segments) - int(projection_height_segments)) * LIGHT_SEG_SIZE)
                 )
+
 
                 #pygame.draw.line(
                 #    self.game.screen, 
