@@ -28,7 +28,7 @@ class Game:
         self.screen.fill((0, 0, 0))
         #self.map.draw()
         #self.player.draw()
-        pygame.draw.rect(self.screen, (125, 125, 125), (0, HEIGHT // 2, WIDTH, HEIGHT // 2))
+        #pygame.draw.rect(self.screen, (125, 125, 125), (0, HEIGHT // 2, WIDTH, HEIGHT // 2))
         self.player_camera.ray_cast()
         
 
