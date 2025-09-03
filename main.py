@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+from settings import RESOLUTION, FPS
 from map_arrays import *
 from map import *
 from player import Player
