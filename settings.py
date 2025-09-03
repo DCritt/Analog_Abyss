@@ -1,4 +1,7 @@
 import math
+from multiprocessing import Pool, cpu_count
+
+POOL = Pool(cpu_count())
 
 #screen settings
 RESOLUTION = WIDTH, HEIGHT = 2500, 1400
@@ -15,7 +18,7 @@ SCREEN_DISTANCE = (WIDTH // 2) / math.tan(FOV / 2)
 SCREEN_CENTER = (WIDTH //2, HEIGHT // 2)
 
 #lighting settings
-DARKNESS_MULTIPLIER = 0.02
+DARKNESS_MULTIPLIER = 1
 INVERSE_DARKNESS_MULTIPLIER = 1 / DARKNESS_MULTIPLIER
 MAX_LIGHT_DISTANCE = 15
 INVERSE_MAX_LIGHT_DISTANCE = 1 / MAX_LIGHT_DISTANCE
