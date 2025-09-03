@@ -1,7 +1,7 @@
 import pygame
 from raycasting import RayCasting
 from settings import *
-from concurrent.futures import ProcessPoolExecutor
+from lighting import Lighting
 
 class PlayerCamera:
     def __init__(self, game, player):
@@ -28,18 +28,15 @@ class PlayerCamera:
 
                 projection_height_segments = projection_height / LIGHT_SEG_SIZE
 
-                color = (0, 0, 0)
+                color = (255, 255, 255)
 
                 center = (WIDTH // 2, HEIGHT //2)
 
                 for segment in range(int(projection_height_segments)):
 
                     location = (ray * RAY_WIDTH_SCALE, ((HEIGHT - projection_height) // 2) + segment * LIGHT_SEG_SIZE)
-                    distance = math.dist(center, location)
-
-                    flashlight_multiplier = (max(((1 / darkness_multiplier) * ((1 / max(distance_multiplier, 0.5)))) * (max(0, 1 - (distance / (HEIGHT * .75)))), darkness_multiplier))
-
-                    color = [255 * (darkness_multiplier * flashlight_multiplier * distance_multiplier)] * 3
+    
+                    color = Lighting.calculate_lighting_multiplier_flashlight((255, 255, 255), ray_info[1], location)
 
                     pygame.draw.rect(
                         self.game.screen,
