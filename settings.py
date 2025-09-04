@@ -2,7 +2,7 @@ import math
 
 #screen settings
 RESOLUTION = WIDTH, HEIGHT = 1500, 700
-FPS = 60
+FPS = 120
 
 #3D projection settings
 FOV = math.pi / 3

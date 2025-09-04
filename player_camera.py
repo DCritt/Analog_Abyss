@@ -20,6 +20,7 @@ class PlayerCamera:
         inverse_max_light_distance = INVERSE_MAX_LIGHT_DISTANCE
         screen_center = SCREEN_CENTER
         max_flashlight_screen_distance = MAX_FLASHLIGHT_SCREEN_DISTANCE
+        screen = self.game.screen
 
         player_pos = self.player.pos
         player_map_pos = self.player.map_pos
@@ -65,14 +66,12 @@ class PlayerCamera:
     
                     color = [(value * (darkness_multiplier * distance_multiplier * flashlight_multiplier)) for value in wall_color]
 
-                    pygame.draw.rect(
-                        self.game.screen,
+                    screen.fill(
                         color,
                         (location[0], location[1], ray_width_scale, light_seg_size)
                     )
 
-                pygame.draw.rect(
-                    self.game.screen,
+                screen.fill(
                     color,
                     (ray_offset, (projection_height_offset + (light_seg_size * projection_height_segments_int)), ray_width_scale,  ((projection_height_segments) - projection_height_segments_int) * light_seg_size)
                 )
@@ -98,14 +97,12 @@ class PlayerCamera:
                     
                     curr_ceil_color = [(value * (darkness_multiplier * flashlight_multiplier * distance_multiplier)) for value in ceil_color]
 
-                    pygame.draw.rect(
-                        self.game.screen,
+                    screen.fill(
                         curr_floor_color,
                         (ray_offset, segment_height, ray_width_scale, light_seg_size)
                     )
 
-                    pygame.draw.rect(
-                        self.game.screen,
+                    screen.fill(
                         curr_ceil_color,
                         (ray_offset, height - segment_height, ray_width_scale, light_seg_size)
                     )
