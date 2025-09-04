@@ -3,9 +3,10 @@ from raycasting import RayCasting
 from settings import *
 from lighting import Lighting
 from multiprocessing import Pool, cpu_count
+from pool import *
 
 def ray_cast_work(args):
-        player_pos, player_map_pos, max_depth, map_dic, player_angle, ray_delta_angle, ray_amt, starting_angle, ray_offset_start = args
+        player_pos, player_map_pos, max_depth, player_angle, ray_delta_angle, ray_amt, starting_angle, ray_offset_start = args
 
         darkness_multiplier = DARKNESS_MULTIPLIER
         height = HEIGHT
@@ -24,7 +25,7 @@ def ray_cast_work(args):
 
         for ray in range(int(ray_amt)):
 
-            ray_info = RayCasting.cast_ray(player_pos, player_map_pos, curr_ray_angle, max_depth, map_dic)
+            ray_info = RayCasting.cast_ray(player_pos, player_map_pos, curr_ray_angle, max_depth, MAP_DIC)
 
             if ray_info[0]:
 
@@ -80,16 +81,7 @@ class PlayerCamera:
 
     def ray_cast(self):
 
-        darkness_multiplier = DARKNESS_MULTIPLIER
-        height = HEIGHT
-        ray_width_scale = RAY_WIDTH_SCALE
-        light_seg_size = LIGHT_SEG_SIZE
         ray_delta_angle = RAY_DELTA_ANGLE
-        screen_distance = SCREEN_DISTANCE
-        max_light_distance = MAX_LIGHT_DISTANCE
-        inverse_max_light_distance = INVERSE_MAX_LIGHT_DISTANCE
-        screen_center = SCREEN_CENTER
-        max_flashlight_screen_distance = MAX_FLASHLIGHT_SCREEN_DISTANCE
 
         player_pos = self.player.pos
         player_map_pos = self.player.map_pos
@@ -102,9 +94,9 @@ class PlayerCamera:
         cpu_angle_delta = FOV / cpu_amt
         pixel_per_cpu = WIDTH / cpu_amt
         
-        args = [(player_pos, player_map_pos, max_depth, map_dic, self.player.player_angle, ray_delta_angle, ray_amt_per_process, (curr_ray_angle + (ray_segment * cpu_angle_delta)), pixel_per_cpu * ray_segment) for ray_segment in range(cpu_amt)]
+        args = [(player_pos, player_map_pos, max_depth, self.player.player_angle, ray_delta_angle, ray_amt_per_process, (curr_ray_angle + (ray_segment * cpu_angle_delta)), pixel_per_cpu * ray_segment) for ray_segment in range(cpu_amt)]
 
-        rects_to_draw = POOL.map(ray_cast_work, args)
+        rects_to_draw = self.game.pool.map(ray_cast_work, args)
 
         for ray_rects in rects_to_draw:
             for rect in ray_rects:

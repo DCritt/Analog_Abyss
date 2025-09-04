@@ -8,6 +8,17 @@ class Map:
         self.map_dic = {}
         self.make_map_dic()
 
+    @staticmethod
+    def make_map_dic(map_arr):
+        map_dic = {}
+
+        for j, row in enumerate(map_arr):
+            for i, value in enumerate(row):
+                if value:
+                    map_dic[(i, j)] = value
+
+        return map_dic
+
     def make_map_dic(self):
         for j, row in enumerate(self.map_arr):
             for i, value in enumerate(row):

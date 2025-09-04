@@ -1,16 +1,14 @@
 import math
 from multiprocessing import Pool, cpu_count
 
-POOL = Pool(cpu_count())
-
 #screen settings
-RESOLUTION = WIDTH, HEIGHT = 2500, 1400
+RESOLUTION = WIDTH, HEIGHT = 1500, 800
 FPS = 60
 
 #3D projection settings
 FOV = math.pi / 3
-RAY_AMT = WIDTH // 16
-LIGHT_SEG_SIZE = 16
+RAY_AMT = WIDTH // 12
+LIGHT_SEG_SIZE = 12
 RAY_DELTA_ANGLE = FOV / RAY_AMT
 MAX_DEPTH = 15
 RAY_WIDTH_SCALE = WIDTH // RAY_AMT

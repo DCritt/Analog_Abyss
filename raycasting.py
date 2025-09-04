@@ -1,4 +1,6 @@
 from settings import *
+from map_arrays import *
+from map import Map
 
 class RayCasting:
 

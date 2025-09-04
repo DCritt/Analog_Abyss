@@ -4,6 +4,8 @@ from map_arrays import *
 from map import *
 from player import Player
 from player_camera import PlayerCamera
+from multiprocessing import Pool, cpu_count
+from pool import worker_init
 
 class Game:
     def __init__(self):
@@ -16,6 +18,9 @@ class Game:
         self.map = Map(self, map1)
         self.player = Player(self)
         self.player_camera = PlayerCamera(self, self.player)
+
+    def set_pool(self, pool):
+        self.pool = pool
 
     def update(self):
         self.player.update()
@@ -46,6 +51,8 @@ class Game:
         pygame.quit()
 
 if __name__ == '__main__':
-    game = Game()
-    game.run()
+        game = Game()
+        with Pool(cpu_count(), worker_init, (game.map.map_dic,)) as pool:
+            game.set_pool(pool)
+            game.run()
     
