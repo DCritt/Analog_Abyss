@@ -36,6 +36,8 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                self.player.event_update(event)
 
     def run(self):
         while self.running:

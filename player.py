@@ -48,7 +48,9 @@ class Player:
         # if keys[pygame.K_f]:
         #     self.flashlight_active = not self.flashlight_active
 
-
+    def event_update(self, event):
+        if event.key == pygame.K_f:
+            self.flashlight_active = not self.flashlight_active
 
     def check_wall_collision(self, dx, dy):
         player_size_scale = self.player_size / self.game.delta_time
