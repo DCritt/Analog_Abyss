@@ -27,6 +27,8 @@ class PlayerCamera:
         max_depth = MAX_DEPTH
         map_dic = self.game.map.map_dic
 
+        camera_height = 0.5
+
         for ray in range(RAY_AMT):
             ray_info = RayCasting.cast_ray(player_pos, player_map_pos, curr_ray_angle, max_depth, map_dic)
 
@@ -60,15 +62,37 @@ class PlayerCamera:
                     pygame.draw.rect(
                         self.game.screen,
                         color,
-                        (ray_offset, (projection_height_offset + segment_offset), ray_width_scale, light_seg_size)
+                        (location[0], location[1], ray_width_scale, light_seg_size)
                     )
-                    
+
                 pygame.draw.rect(
                     self.game.screen,
                     color,
                     (ray_offset, (projection_height_offset + (light_seg_size * projection_height_segments_int)), ray_width_scale,  ((projection_height_segments) - projection_height_segments_int) * light_seg_size)
                 )
 
+                projection_offset = projection_height_offset + projection_height
+
+                floor_segments = (HEIGHT - projection_offset) / light_seg_size
+                floor_segments_int = int(floor_segments)
+
+                for segment in range(floor_segments_int):
+                    segment_height = projection_offset + (segment * light_seg_size)
+                    height_from_horizon = segment_height - (height // 2)
+
+                    floor_distance = float("inf") if height_from_horizon == 0 else (camera_height * screen_distance) / (height_from_horizon)
+                    distance_multiplier = 0 if floor_distance > max_light_distance else 1 - (floor_distance * inverse_max_light_distance)
+                    
+                    center_screen_distance = (ray_offset - screen_center[0])**2 + (segment_height - screen_center[1])**2
+                    flashlight_multiplier = 1 if center_screen_distance > max_flashlight_screen_distance else Lighting.calculate_flashlight_multiplier(center_screen_distance, 1 / (distance_multiplier + 0.00001))
+
+                    color = [200 * (darkness_multiplier * flashlight_multiplier * distance_multiplier)]*3
+
+                    pygame.draw.rect(
+                        self.game.screen,
+                        color,
+                        (ray_offset, segment_height, ray_width_scale, light_seg_size)
+                    )
 
                 #pygame.draw.line(
                 #    self.game.screen, 
