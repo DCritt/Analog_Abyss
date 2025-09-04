@@ -11,14 +11,14 @@ class Player:
         self.player_size = 60
         self.player_speed = .005
         self.player_rotation_speed = 0.002
+        self.flashlight_active = True
 
-    def move_player(self):
+    def move_player(self, keys):
         speed = self.player_speed * self.game.delta_time
         speed_x = speed * math.cos(self.player_angle)
         speed_y = speed * math.sin(self.player_angle)
         dx, dy = 0, 0
 
-        keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             dx += speed_x
             dy += speed_y
@@ -42,7 +42,13 @@ class Player:
         self.player_angle %= math.tau
 
     def update(self):
-        self.move_player()
+        keys = pygame.key.get_pressed()
+        self.move_player(keys)
+
+        # if keys[pygame.K_f]:
+        #     self.flashlight_active = not self.flashlight_active
+
+
 
     def check_wall_collision(self, dx, dy):
         player_size_scale = self.player_size / self.game.delta_time
