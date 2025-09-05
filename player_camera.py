@@ -30,9 +30,9 @@ class PlayerCamera:
 
         camera_height = 0.5
 
-        wall_color = (92, 64, 51)
-        ceil_color = (200, 200, 200)
-        floor_color = (200, 200, 200)
+        wall_color = (46, 32, 25)
+        ceil_color = (100, 100, 100)
+        floor_color = (100, 100, 100)
 
         flashlight_active = self.player.flashlight_active
 
@@ -86,13 +86,11 @@ class PlayerCamera:
                     height_from_horizon = segment_height - (height // 2)
 
                     floor_distance = float("inf") if height_from_horizon == 0 else (camera_height * screen_distance) / (height_from_horizon)
-                    #floor_distance = cos_ray_angle * floor_distance
                     distance_multiplier = 0 if floor_distance > max_light_distance else 1 - (floor_distance * inverse_max_light_distance)
                     
                     center_screen_distance = (ray_offset - screen_center[0])**2 + (segment_height - screen_center[1])**2
                     flashlight_multiplier = 1 if center_screen_distance > max_flashlight_screen_distance or not flashlight_active else Lighting.calculate_flashlight_multiplier(center_screen_distance, 1 / (distance_multiplier + 0.00001))
 
-                    #color_floor = [200 * (darkness_multiplier * flashlight_multiplier * distance_multiplier)]*3
                     curr_floor_color = [(value * (darkness_multiplier * flashlight_multiplier * distance_multiplier)) for value in floor_color]
                     
                     curr_ceil_color = [(value * (darkness_multiplier * flashlight_multiplier * distance_multiplier)) for value in ceil_color]
