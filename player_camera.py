@@ -8,8 +8,9 @@ class PlayerCamera:
         self.game = game
         self.player = player
 
-    def ray_cast(self):
+    def draw_view(self):
 
+        #grab all globals and make local references in order to make future retrievals faster
         darkness_multiplier = DARKNESS_MULTIPLIER
         height = HEIGHT
         ray_width_scale = RAY_WIDTH_SCALE
@@ -21,14 +22,14 @@ class PlayerCamera:
         screen_center = SCREEN_CENTER
         max_flashlight_screen_distance = MAX_FLASHLIGHT_SCREEN_DISTANCE
         screen = self.game.screen
+        camera_height = 0.5
 
+        #grab all information necessary for ray casting
         player_pos = self.player.pos
         player_map_pos = self.player.map_pos
         curr_ray_angle = self.player.player_angle - (FOV / 2) + 0.0001
         max_depth = MAX_DEPTH
         map_dic = self.game.map.map_dic
-
-        camera_height = 0.5
 
         wall_color = (46, 32, 25)
         ceil_color = (100, 100, 100)

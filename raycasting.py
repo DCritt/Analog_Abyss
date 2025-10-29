@@ -12,7 +12,7 @@ class RayCasting:
 
         #determine which vertical direction the ray is going
         hor_y, hor_dy = (map_pos[1] + 1, 1) if sin_angle > 0 else (map_pos[1] - 1e-6, -1)
-
+        
         #find inital depth and first y intercept x coordinate
         hor_depth = (hor_y - pos[1]) / sin_angle
         hor_x = pos[0] + hor_depth * cos_angle
@@ -59,9 +59,11 @@ class RayCasting:
             if (vert_depth > max_length):
                 vert_depth = max_length
 
+        #ray was max length
         if (hor_depth == max_length and vert_depth == max_length):
             return (False, -1, None, -1)
         
+        #return shorter raycast
         if (hor_depth <= vert_depth):
             return (True, hor_depth, (hor_x, hor_y), hor_grid_coll_value)
         else:
