@@ -1,8 +1,28 @@
 #include "graphics.h"
 
-Color wall_color = {46, 32, 25};
-Color ceil_color = {100, 100, 100};
-Color floor_color = {100, 100, 100};
+const Color WALL_COLOR = {46, 32, 25};
+const Color CEIL_COLOR = {100, 100, 100};
+const Color FLOOR_COLOR = {100, 100, 100};
+
+int WIDTH;
+int HEIGHT;
+
+int RAY_AMT;
+int LIGHT_SEG_SIZE;
+double RAY_DELTA_ANGLE;
+int RAY_WIDTH_SCALE;
+double SCREEN_DISTANCE;
+
+void init_graphics_settings(int width, int height, int definition) {
+    WIDTH = width;
+    HEIGHT = height;
+
+    RAY_AMT = width / definition;
+    LIGHT_SEG_SIZE = definition;
+    RAY_DELTA_ANGLE = FOV / RAY_AMT;
+    RAY_WIDTH_SCALE = width / RAY_AMT;
+    SCREEN_DISTANCE = (width / 2) / tan(FOV / 2);
+}
 
 uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2], const double player_angle) {
     
@@ -29,8 +49,8 @@ uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2]
             int projection_height_offset = (int)((HEIGHT - projection_height) / 2);
 
             write_wall_slice(pixels, center_screen, wall_segments, ray_offset, projection_height, corrected_ray_depth);
-            write_flat_slice(pixels, floor_color, center_screen, ray_offset, (int)(projection_height_offset + projection_height), (HEIGHT - 1));
-            write_flat_slice(pixels, ceil_color, center_screen, ray_offset, 0, projection_height_offset);
+            write_flat_slice(pixels, FLOOR_COLOR, center_screen, ray_offset, (int)(projection_height_offset + projection_height), (HEIGHT - 1));
+            write_flat_slice(pixels, CEIL_COLOR, center_screen, ray_offset, 0, projection_height_offset);
         }
         curr_ray_angle += RAY_DELTA_ANGLE;
     }
@@ -51,8 +71,8 @@ static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int se
         double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
         double light_mult = lighting_multiplier_func(0.1, center_screen_dist, ray_depth, MAX_LIGHT_DISTANCE);
         
-        uint8_t row[RAY_WIDTH_SCALE * 3];
-        Color wall_color_lighted = {(wall_color.r * light_mult), (wall_color.g * light_mult), (wall_color.b * light_mult)};
+        uint8_t row[RAY_WIDTH_SCALE* 3];
+        Color wall_color_lighted = {(WALL_COLOR.r * light_mult), (WALL_COLOR.g * light_mult), (WALL_COLOR.b * light_mult)};
         for (int j = 0; j < RAY_WIDTH_SCALE; j++) {
             row[(j * 3)] = wall_color_lighted.r;
             row[(j * 3) + 1] = wall_color_lighted.g;

@@ -2,7 +2,7 @@ import pygame
 import ctypes
 import platform
 from pathlib import Path
-from settings import RESOLUTION, FPS
+from settings import RESOLUTION, WIDTH, HEIGHT, FPS, DEFINITION
 from map_arrays import *
 from map import *
 from player import Player
@@ -20,12 +20,26 @@ class Game:
         curr_dir = Path(__file__).resolve().parent
         lib_path = curr_dir / "C_Files" / lib_name
         self.graphics_lib = ctypes.CDLL(str(lib_path))
+        
         self.graphics_lib.generate_pixels.restype = ctypes.POINTER(ctypes.c_uint8)
         self.graphics_lib.generate_pixels.argtypes = [
             ctypes.POINTER(ctypes.c_double * 2),
             ctypes.POINTER(ctypes.c_int * 2),
             ctypes.c_double
         ]
+
+        self.graphics_lib.init_graphics_settings.argtypes = [
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int
+        ]
+
+        self.graphics_lib.init_lighting_settings.argtypes = [
+            ctypes.c_int
+        ]
+
+        self.graphics_lib.init_graphics_settings(WIDTH, HEIGHT, DEFINITION)
+        self.graphics_lib.init_lighting_settings(HEIGHT)
 
         self.map = Map(self, map1)
         self.player = Player(self)
