@@ -1,9 +1,8 @@
 #include "raycasting.h"
 
-Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, const double max_length, const uint8_t** map) {
-    double radians = angle * (M_PI / 180);
-    double sin_angle = sin(radians);
-    double cos_angle = cos(radians);
+Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, const double max_length) {
+    double sin_angle = sin(angle);
+    double cos_angle = cos(angle);
 
     int hor_grid_coll_value = -1;
     IntPoint hor_map_pos;
@@ -18,10 +17,10 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     double hor_dx = hor_depth_delta * cos_angle;
 
     while (hor_depth < max_length) {
-        hor_map_pos.x = (int)hor_x;
-        hor_map_pos.y = (int)hor_y;
-        if (map[hor_map_pos.x][hor_map_pos.y] != 0) {
-            hor_grid_coll_value = map[hor_map_pos.x][hor_map_pos.y];
+        hor_map_pos.x = hor_x;
+        hor_map_pos.y = hor_y;
+        if (map1[hor_map_pos.y][hor_map_pos.x] != 0) {
+            hor_grid_coll_value = map1[hor_map_pos.y][hor_map_pos.x];
             break;         
         }
         hor_x += hor_dx;
@@ -44,10 +43,10 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     double vert_dy = vert_depth_delta * sin_angle;
 
     while (vert_depth < max_length) {
-        vert_map_pos.x = (int)vert_x;
-        vert_map_pos.y = (int)vert_y;
-        if (map[vert_map_pos.x][vert_map_pos.y] != 0) {
-            vert_grid_coll_value = map[vert_map_pos.x][vert_map_pos.y];
+        vert_map_pos.x = vert_x;
+        vert_map_pos.y = vert_y;
+        if (map1[vert_map_pos.y][vert_map_pos.x] != 0) {
+            vert_grid_coll_value = map1[vert_map_pos.y][vert_map_pos.x];
             break;         
         }
         vert_x += vert_dx;
@@ -61,7 +60,8 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     if (hor_depth >= max_length && vert_depth >= max_length) {
         ray.hit = 0;
         ray.depth = -1;
-        ray.hit_loc = NULL;
+        ray.hit_loc.x = -1;
+        ray.hit_loc.y = -1;
         ray.grid_val = -1;
         return ray;
     }

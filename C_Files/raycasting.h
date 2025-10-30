@@ -3,6 +3,9 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
+#include "map.h"
 
 #define MAX_DEPTH (30)
 
@@ -23,6 +26,6 @@ typedef struct Ray {
     int grid_val;
 } Ray;
 
-Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, const double max_length, const uint8_t** map);
+Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, const double max_length);
 
 #endif
