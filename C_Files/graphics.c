@@ -24,6 +24,64 @@ void init_graphics_settings(int width, int height, int definition) {
     SCREEN_DISTANCE = (width / 2) / tan(FOV / 2);
 }
 
+static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, double proj_height, double ray_depth) {
+    int proj_height_offset = (int)((HEIGHT - proj_height) / 2);
+
+    int remainder_height = (int)(proj_height - (segments * LIGHT_SEG_SIZE));
+    int total_segments = segments + (remainder_height > 0);
+    for (int i = 0; i < total_segments; i++) {
+        int segment_height = (i == segments) ? remainder_height : LIGHT_SEG_SIZE;
+        int segment_offset = proj_height_offset + (i * LIGHT_SEG_SIZE);
+
+        double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
+        double light_mult = lighting_multiplier_func(center_screen_dist, ray_depth, MAX_LIGHT_DISTANCE);
+        
+        uint8_t row[RAY_WIDTH_SCALE * 3];
+        Color wall_color_lighted = {(WALL_COLOR.r * light_mult), (WALL_COLOR.g * light_mult), (WALL_COLOR.b * light_mult)};
+        for (int j = 0; j < RAY_WIDTH_SCALE; j++) {
+            row[(j * 3)] = wall_color_lighted.r;
+            row[(j * 3) + 1] = wall_color_lighted.g;
+            row[(j * 3) + 2] = wall_color_lighted.b;
+        }
+
+        int bit_offset = ((segment_offset * WIDTH) + ray_offset) * 3;
+        for (int j = 0; j < segment_height; j++) {
+            memcpy(((pixels + bit_offset) + (j * WIDTH * 3)), row, (RAY_WIDTH_SCALE * 3));
+        }
+    }
+}
+
+static inline void write_flat_slice(uint8_t *pixels, Color color, Point center_screen, int ray_offset, int y1, int y2) {
+    int flat_height = y2 - y1;
+    int dist_from_horizon = (y1 > center_screen.y) ? (y1 - center_screen.y) : (center_screen.y - y1);
+
+    int segments = flat_height / LIGHT_SEG_SIZE;
+    int remainder_height = flat_height - (segments * LIGHT_SEG_SIZE);
+    int total_segments = segments + (remainder_height > 0);
+    for (int i = 0; i < total_segments; i++) {
+        int segment_height = (i == segments) ? remainder_height : LIGHT_SEG_SIZE;
+        int segment_offset = y1 + (i * LIGHT_SEG_SIZE);
+
+        double floor_dist = (dist_from_horizon == 0) ? INFINITY : ((CAMERA_HEIGHT * SCREEN_DISTANCE) / dist_from_horizon);
+        double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
+        double light_mult = lighting_multiplier_func(center_screen_dist, floor_dist, MAX_LIGHT_DISTANCE);
+    
+        uint8_t row[RAY_WIDTH_SCALE * 3];
+        Color color_lighted = {(color.r * light_mult), (color.g * light_mult), (color.b * light_mult)};
+        for (int j = 0; j < RAY_WIDTH_SCALE; j++) {
+            row[(j * 3)] = color_lighted.r;
+            row[(j * 3) + 1] = color_lighted.g;
+            row[(j * 3) + 2] = color_lighted.b;
+        }
+
+        int bit_offset = ((segment_offset * WIDTH) + ray_offset) * 3;
+        for (int j = 0; j < segment_height; j++) {
+            memcpy(((pixels + bit_offset) + (j * WIDTH * 3)), row, (RAY_WIDTH_SCALE * 3));
+        }
+        dist_from_horizon += (y1 > center_screen.y) ? segment_height : -segment_height;
+    }
+}
+
 uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2], const double player_angle) {
     
     Point pos = {player_pos[0], player_pos[1]};
@@ -59,60 +117,4 @@ uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2]
 
 }
 
-static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, double proj_height, double ray_depth) {
-    int proj_height_offset = (int)((HEIGHT - proj_height) / 2);
-
-    int remainder_height = (int)(proj_height - (segments * LIGHT_SEG_SIZE));
-    int total_segments = segments + (remainder_height > 0);
-    for (int i = 0; i < total_segments; i++) {
-        int segment_height = (i == segments) ? remainder_height : LIGHT_SEG_SIZE;
-        int segment_offset = proj_height_offset + (i * LIGHT_SEG_SIZE);
-
-        double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
-        double light_mult = lighting_multiplier_func(0.1, center_screen_dist, ray_depth, MAX_LIGHT_DISTANCE);
-        
-        uint8_t row[RAY_WIDTH_SCALE* 3];
-        Color wall_color_lighted = {(WALL_COLOR.r * light_mult), (WALL_COLOR.g * light_mult), (WALL_COLOR.b * light_mult)};
-        for (int j = 0; j < RAY_WIDTH_SCALE; j++) {
-            row[(j * 3)] = wall_color_lighted.r;
-            row[(j * 3) + 1] = wall_color_lighted.g;
-            row[(j * 3) + 2] = wall_color_lighted.b;
-        }
-
-        int bit_offset = ((segment_offset * WIDTH) + ray_offset) * 3;
-        for (int j = 0; j < segment_height; j++) {
-            memcpy(((pixels + bit_offset) + (j * WIDTH * 3)), row, (RAY_WIDTH_SCALE * 3));
-        }
-    }
-}
-
-static inline void write_flat_slice(uint8_t *pixels, Color color, Point center_screen, int ray_offset, int y1, int y2) {
-    int flat_height = y2 - y1;
-    int dist_from_horizon = (y1 > center_screen.y) ? (y1 - center_screen.y) : (center_screen.y - y1);
-
-    int segments = flat_height / LIGHT_SEG_SIZE;
-    int remainder_height = flat_height - (segments * LIGHT_SEG_SIZE);
-    int total_segments = segments + (remainder_height > 0);
-    for (int i = 0; i < total_segments; i++) {
-        int segment_height = (i == segments) ? remainder_height : LIGHT_SEG_SIZE;
-        int segment_offset = y1 + (i * LIGHT_SEG_SIZE);
-
-        double floor_dist = (dist_from_horizon == 0) ? INFINITY : ((CAMERA_HEIGHT * SCREEN_DISTANCE) / dist_from_horizon);
-        double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
-        double light_mult = lighting_multiplier_func(0.1, center_screen_dist, floor_dist, MAX_LIGHT_DISTANCE);
-    
-        uint8_t row[RAY_WIDTH_SCALE * 3];
-        Color color_lighted = {(color.r * light_mult), (color.g * light_mult), (color.b * light_mult)};
-        for (int j = 0; j < RAY_WIDTH_SCALE; j++) {
-            row[(j * 3)] = color_lighted.r;
-            row[(j * 3) + 1] = color_lighted.g;
-            row[(j * 3) + 2] = color_lighted.b;
-        }
-
-        int bit_offset = ((segment_offset * WIDTH) + ray_offset) * 3;
-        for (int j = 0; j < segment_height; j++) {
-            memcpy(((pixels + bit_offset) + (j * WIDTH * 3)), row, (RAY_WIDTH_SCALE * 3));
-        }
-        dist_from_horizon += (y1 > center_screen.y) ? segment_height : -segment_height;
-    }
-}
+void free_pixels(uint8_t *pixels) { free(pixels); }

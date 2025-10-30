@@ -21,6 +21,7 @@ class PlayerCamera:
         converted_pixels = np.transpose(converted_pixels, (1, 0, 2))
 
         pygame.surfarray.blit_array(self.game.screen, converted_pixels)
+        self.lib.free_pixels(pixels)
         
 
         # #grab all globals and make local references in order to make future retrievals faster

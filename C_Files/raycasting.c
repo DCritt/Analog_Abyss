@@ -47,7 +47,7 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
         vert_map_pos.y = vert_y;
         if (map1[vert_map_pos.y][vert_map_pos.x] != 0) {
             vert_grid_coll_value = map1[vert_map_pos.y][vert_map_pos.x];
-            break;         
+            break;
         }
         vert_x += vert_dx;
         vert_y += vert_dy;

@@ -34,7 +34,6 @@ typedef struct ColorA {
 
 void init_graphics_settings(int width, int height, int definition);
 uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2], double player_angle);
-static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, double proj_height, double ray_depth);
-static inline void write_flat_slice(uint8_t *pixels, Color color, Point center_screen, int ray_offset, int y1, int y2);
+void free_pixels(uint8_t *pixels);
 
 #endif
