@@ -8,10 +8,11 @@ class RayCasting:
         cos_angle = math.cos(angle)
 
         #horizonal raycast
+        hor_grid_coll_value = -1
 
         #determine which vertical direction the ray is going
         hor_y, hor_dy = (map_pos[1] + 1, 1) if sin_angle > 0 else (map_pos[1] - 1e-6, -1)
-
+        
         #find inital depth and first y intercept x coordinate
         hor_depth = (hor_y - pos[1]) / sin_angle
         hor_x = pos[0] + hor_depth * cos_angle
@@ -23,6 +24,7 @@ class RayCasting:
         while (hor_depth < max_length):
             hor_map_pos = int(hor_x), int(hor_y)
             if (hor_map_pos in map_dic):
+               hor_grid_coll_value = map_dic[hor_map_pos]
                break
             hor_x += hor_dx
             hor_y += hor_dy
@@ -32,6 +34,7 @@ class RayCasting:
                hor_depth = max_length
 
         #vertical raycast
+        vert_grid_coll_value = -1
 
         #determine which vertical direction the ray is going
         vert_x, vert_dx = (map_pos[0] + 1, 1) if cos_angle > 0 else (map_pos[0] - 1e-6, -1)
@@ -47,6 +50,7 @@ class RayCasting:
         while (vert_depth < max_length):
             vert_map_pos = int(vert_x), int(vert_y)
             if (vert_map_pos in map_dic):
+                vert_grid_coll_value = map_dic[vert_map_pos]
                 break
             vert_x += vert_dx
             vert_y += vert_dy
@@ -54,8 +58,13 @@ class RayCasting:
 
             if (vert_depth > max_length):
                 vert_depth = max_length
+
+        #ray was max length
+        if (hor_depth == max_length and vert_depth == max_length):
+            return (False, -1, None, -1)
         
+        #return shorter raycast
         if (hor_depth <= vert_depth):
-            return hor_depth
+            return (True, hor_depth, (hor_x, hor_y), hor_grid_coll_value)
         else:
-            return vert_depth
+            return (True, vert_depth, (vert_x, vert_y), vert_grid_coll_value)
