@@ -12,10 +12,10 @@ run:
 
 compile: compile_linux compile_windows
 
-compile_linux: compile_graphics compile_raycasting compile_lighting compile_map
+compile_linux: compile_graphics compile_raycasting compile_lighting compile_map compile_linked_list
 	$(CC) $(CFLAGS_DL) Object_Linker_Files/mygraphics.so Object_Linker_Files/*.o
 
-compile_windows: compile_graphics compile_raycasting compile_lighting compile_map
+compile_windows: compile_graphics compile_raycasting compile_lighting compile_map compile_linked_list
 	$(CC) $(CFLAGS_DL) Object_Linker_Files/mygraphics.dll Object_Linker_Files/*.o
 	
 compile_graphics:
@@ -29,6 +29,9 @@ compile_lighting:
 
 compile_map:
 	$(CC) $(CFLAGS) C_Files/map.c -o Object_Linker_Files/map.o
+
+compile_linked_list:
+	$(CC) $(CFLAGS) C_Files/linked_list.c -o Object_Linker_Files/linked_list.o
 
 clean:
 ifeq ($(OS),Windows_NT)

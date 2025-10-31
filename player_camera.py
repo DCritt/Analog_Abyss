@@ -1,9 +1,7 @@
 import pygame
 import ctypes
 import numpy as np
-from raycasting import RayCasting
 from settings import *
-from lighting import Lighting
 
 class PlayerCamera:
     def __init__(self, game, player):
