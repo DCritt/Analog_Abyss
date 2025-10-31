@@ -2,10 +2,15 @@
 #define MAP_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
-#define MAP_HEIGHT 25
-#define MAP_WIDTH 25
+extern int map_width;
+extern int map_height;
 
-extern uint8_t map1[MAP_HEIGHT][MAP_WIDTH];
+extern uint8_t **curr_map;
+
+void set_map(int width, int height, uint8_t **map);
+void free_map();
 
 #endif

@@ -7,7 +7,7 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     int hor_grid_coll_value = -1;
     IntPoint hor_map_pos;
 
-    double hor_y = (sin_angle > 0) ? (map_pos->y) + 1 : (map_pos->y - 1e-6);
+    double hor_y = (sin_angle > 0) ? (map_pos->y + 1) : (map_pos->y - 1e-6);
     int hor_dy = (sin_angle > 0) ? 1 : -1;
 
     double hor_depth = (hor_y - pos->y) / sin_angle;
@@ -19,8 +19,12 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     while (hor_depth < max_length) {
         hor_map_pos.x = hor_x;
         hor_map_pos.y = hor_y;
-        if (map1[hor_map_pos.y][hor_map_pos.x] != 0) {
-            hor_grid_coll_value = map1[hor_map_pos.y][hor_map_pos.x];
+        if (hor_map_pos.x < 0 || hor_map_pos.x >= map_width || hor_map_pos.y < 0 || hor_map_pos.y >= map_height) {
+            hor_depth = max_length;
+            break;
+        }
+        if (curr_map[hor_map_pos.y][hor_map_pos.x] != 0) {
+            hor_grid_coll_value = curr_map[hor_map_pos.y][hor_map_pos.x];
             break;         
         }
         hor_x += hor_dx;
@@ -45,8 +49,12 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     while (vert_depth < max_length) {
         vert_map_pos.x = vert_x;
         vert_map_pos.y = vert_y;
-        if (map1[vert_map_pos.y][vert_map_pos.x] != 0) {
-            vert_grid_coll_value = map1[vert_map_pos.y][vert_map_pos.x];
+        if (vert_map_pos.x < 0 || vert_map_pos.x >= map_width || vert_map_pos.y < 0 || vert_map_pos.y >= map_height) {
+            vert_depth = max_length;
+            break;
+        }
+        if (curr_map[vert_map_pos.y][vert_map_pos.x] != 0) {
+            vert_grid_coll_value = curr_map[vert_map_pos.y][vert_map_pos.x];
             break;
         }
         vert_x += vert_dx;

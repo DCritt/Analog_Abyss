@@ -27,26 +27,28 @@ class Game:
             ctypes.POINTER(ctypes.c_int * 2),
             ctypes.c_double
         ]
-
         self.graphics_lib.free_pixels.argtypes = [
             ctypes.POINTER(ctypes.c_uint8)
         ]
-
         self.graphics_lib.init_graphics_settings.argtypes = [
             ctypes.c_int,
             ctypes.c_int,
             ctypes.c_int
         ]
-
         self.graphics_lib.init_lighting_settings.argtypes = [
             ctypes.c_int,
             ctypes.c_double
+        ]
+        self.graphics_lib.set_map.argtypes = [
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.POINTER(ctypes.POINTER(ctypes.c_uint8))
         ]
 
         self.graphics_lib.init_graphics_settings(WIDTH, HEIGHT, DEFINITION)
         self.graphics_lib.init_lighting_settings(HEIGHT, DARKNESS_MULTIPLIER)
 
-        self.map = Map(self, map1)
+        self.map = Map(self, map1, self.graphics_lib)
         self.player = Player(self)
         self.player_camera = PlayerCamera(self, self.player)
 
@@ -69,6 +71,7 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+                self.graphics_lib.free_map()
             if event.type == pygame.KEYDOWN:
                 self.player.event_update(event)
 

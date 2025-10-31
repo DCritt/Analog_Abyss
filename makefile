@@ -33,6 +33,8 @@ compile_map:
 clean:
 ifeq ($(OS),Windows_NT)
 	del /Q Object_Linker_Files\*.o Object_Linker_Files\*.dll Object_Linker_Files\*.so
+	cls
 else
 	rm -f Object_Linker_Files/*.o Object_Linker_Files/*.dll Object_Linker_Files/*.so
+	clear
 endif
