@@ -4,8 +4,12 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     double sin_angle = sin(angle);
     double cos_angle = cos(angle);
 
+    enum HitSide hor_hit_side = (sin(angle) > 0) ? TOP : BOTTOM;
+    enum HitSide vert_hit_side = (cos(angle) < 0) ? RIGHT : LEFT;
+
     int hor_grid_coll_value = -1;
     IntPoint hor_map_pos;
+    Point hor_pos;
 
     double hor_y = (sin_angle > 0) ? (map_pos->y + 1) : (map_pos->y - 1e-6);
     int hor_dy = (sin_angle > 0) ? 1 : -1;
@@ -19,6 +23,8 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     while (hor_depth < max_length) {
         hor_map_pos.x = hor_x;
         hor_map_pos.y = hor_y;
+        hor_pos.x = hor_x;
+        hor_pos.y = hor_y;
         if (hor_map_pos.x < 0 || hor_map_pos.x >= map_width || hor_map_pos.y < 0 || hor_map_pos.y >= map_height) {
             hor_depth = max_length;
             break;
@@ -36,6 +42,7 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
 
     int vert_grid_coll_value = -1;
     IntPoint vert_map_pos;
+    Point vert_pos;
 
     double vert_x = (cos_angle > 0) ? (map_pos->x + 1) : (map_pos->x - 1e-6);
     int vert_dx = (cos_angle > 0) ? 1 : -1;
@@ -49,6 +56,8 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     while (vert_depth < max_length) {
         vert_map_pos.x = vert_x;
         vert_map_pos.y = vert_y;
+        vert_pos.x = vert_x;
+        vert_pos.y = vert_y;
         if (vert_map_pos.x < 0 || vert_map_pos.x >= map_width || vert_map_pos.y < 0 || vert_map_pos.y >= map_height) {
             vert_depth = max_length;
             break;
@@ -71,18 +80,21 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
         ray.hit_loc.x = -1;
         ray.hit_loc.y = -1;
         ray.grid_val = -1;
+        ray.hit_side = TOP;
         return ray;
     }
 
     ray.hit = 1;
     if (hor_depth <= vert_depth) {
         ray.depth = hor_depth;
-        ray.hit_loc = hor_map_pos;
+        ray.hit_loc = hor_pos;
         ray.grid_val = hor_grid_coll_value;
+        ray.hit_side = hor_hit_side;
     } else {
         ray.depth = vert_depth;
-        ray.hit_loc = vert_map_pos;
+        ray.hit_loc = vert_pos;
         ray.grid_val = vert_grid_coll_value;
+        ray.hit_side = vert_hit_side;
     }
     return ray;
 }

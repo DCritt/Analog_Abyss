@@ -45,8 +45,30 @@ class Game:
             ctypes.POINTER(ctypes.POINTER(ctypes.c_uint8))
         ]
 
+        self.graphics_lib.init_textures.argtypes = [
+            ctypes.POINTER(ctypes.POINTER(ctypes.c_char)),
+            ctypes.c_int,
+            ctypes.c_int
+        ]
+
         self.graphics_lib.init_graphics_settings(WIDTH, HEIGHT, DEFINITION)
         self.graphics_lib.init_lighting_settings(HEIGHT, DARKNESS_MULTIPLIER)
+
+
+        texture_dir = curr_dir / "Sprites" / "Wall_Textures"
+        file_paths = [file for file in texture_dir.iterdir()]
+        num_paths = len(file_paths)
+
+        c_file_paths_array = []
+        for f in file_paths:
+            s = str(f).encode('utf-8') + b'\0'
+            buf = ctypes.create_string_buffer(s)     
+            c_file_paths_array.append(buf)
+
+        paths_type = ctypes.POINTER(ctypes.c_char) * num_paths
+        c_file_paths = paths_type(*[ctypes.cast(buf, ctypes.POINTER(ctypes.c_char)) for buf in c_file_paths_array])
+
+        self.graphics_lib.init_textures(c_file_paths, num_paths, 64)
 
         self.map = Map(self, map1, self.graphics_lib)
         self.player = Player(self)
@@ -72,6 +94,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
                 self.graphics_lib.free_map()
+                self.graphics_lib.free_textures()
             if event.type == pygame.KEYDOWN:
                 self.player.event_update(event)
 

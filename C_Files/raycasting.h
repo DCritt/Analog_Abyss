@@ -9,6 +9,13 @@
 
 #define MAX_DEPTH (30)
 
+enum HitSide {
+    TOP,
+    BOTTOM,
+    RIGHT,
+    LEFT
+};
+
 typedef struct Point {
     double x;
     double y;
@@ -22,8 +29,9 @@ typedef struct IntPoint {
 typedef struct Ray {
     int hit;
     double depth;
-    IntPoint hit_loc;
+    Point hit_loc;
     int grid_val;
+    enum HitSide hit_side;
 } Ray;
 
 Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, const double max_length);
