@@ -24,7 +24,7 @@ void init_graphics_settings(int width, int height, int definition) {
     SCREEN_DISTANCE = (width / 2) / tan(FOV / 2);
 }
 
-static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, int proj_height, double ray_depth, int ray_texture_offset) {
+static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, int proj_height, double ray_depth, int wall_tex_num, int ray_texture_offset) {
     int proj_height_offset = (int)((HEIGHT - proj_height) / 2);
 
     int remainder_height = (int)(proj_height - (segments * LIGHT_SEG_SIZE));
@@ -38,7 +38,7 @@ static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int se
 
         int texture_offset_y = ((WALL_TEX_DIMENSIONS - 1) * ((i * LIGHT_SEG_SIZE) / (double)proj_height));
         uint8_t color[COLOR_SIZE];
-        get_tex_color(color, 0, texture_offset_y, ray_texture_offset);
+        get_tex_color(color, wall_tex_num, texture_offset_y, ray_texture_offset);
         uint8_t color_row[COLOR_SIZE * RAY_WIDTH_SCALE];
         color[0] = color[0] * light_mult;
         color[1] = color[1] * light_mult;
@@ -122,7 +122,7 @@ uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2]
             hit_prop = ray.hit_loc.y - floor(ray.hit_loc.y);
         }
 
-        if (side == TOP || side == LEFT) {
+        if (side == TOP || side == RIGHT) {
             hit_prop = 1.0 - hit_prop;
         }
 
@@ -138,7 +138,7 @@ uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2]
             int ray_offset = i * RAY_WIDTH_SCALE;
             int projection_height_offset = (int)((HEIGHT - projection_height) / 2);
 
-            write_wall_slice(pixels, center_screen, wall_segments, ray_offset, projection_height, corrected_ray_depth, ray_texture_offset);
+            write_wall_slice(pixels, center_screen, wall_segments, ray_offset, projection_height, corrected_ray_depth, ray.grid_val, ray_texture_offset);
             write_flat_slice(pixels, FLOOR_COLOR, center_screen, ray_offset, (int)(projection_height_offset + projection_height), (HEIGHT - 1));
             write_flat_slice(pixels, CEIL_COLOR, center_screen, ray_offset, 0, projection_height_offset);
         }
