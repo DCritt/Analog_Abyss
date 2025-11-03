@@ -8,8 +8,8 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     enum HitSide vert_hit_side = (cos(angle) < 0) ? RIGHT : LEFT;
 
     int hor_grid_coll_value = -1;
-    IntPoint hor_map_pos;
-    Point hor_pos;
+    IntPoint hor_map_pos = {0, 0};
+    Point hor_pos = {0.0, 0.0};
 
     double hor_y = (sin_angle > 0) ? (map_pos->y + 1) : (map_pos->y - 1e-6);
     int hor_dy = (sin_angle > 0) ? 1 : -1;
@@ -41,8 +41,8 @@ Ray cast_ray(const Point *pos, const IntPoint *map_pos, const double angle, cons
     }
 
     int vert_grid_coll_value = -1;
-    IntPoint vert_map_pos;
-    Point vert_pos;
+    IntPoint vert_map_pos = {0, 0};
+    Point vert_pos = {0.0, 0.0};
 
     double vert_x = (cos_angle > 0) ? (map_pos->x + 1) : (map_pos->x - 1e-6);
     int vert_dx = (cos_angle > 0) ? 1 : -1;

@@ -18,7 +18,9 @@ extern int RAY_AMT;
 extern int LIGHT_SEG_SIZE;
 extern double RAY_DELTA_ANGLE;
 extern int RAY_WIDTH_SCALE;
+extern int DEFINITION;
 extern double SCREEN_DISTANCE;
+extern Point CENTER_SCREEN;
 
 extern double *flat_light_mults;
 
