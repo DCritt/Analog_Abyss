@@ -30,7 +30,7 @@ class Game:
         self.graphics_lib.free_pixels.argtypes = [
             ctypes.POINTER(ctypes.c_uint8)
         ]
-        self.graphics_lib.init_graphics_settings.argtypes = [
+        self.graphics_lib.init_graphics.argtypes = [
             ctypes.c_int,
             ctypes.c_int,
             ctypes.c_int
@@ -51,9 +51,8 @@ class Game:
             ctypes.c_int
         ]
 
-        self.graphics_lib.init_graphics_settings(WIDTH, HEIGHT, DEFINITION)
+        self.graphics_lib.init_graphics(WIDTH, HEIGHT, DEFINITION)
         self.graphics_lib.init_lighting_settings(HEIGHT, DARKNESS_MULTIPLIER)
-
 
         texture_dir = curr_dir / "Sprites" / "Wall_Textures"
         file_paths = [file for file in texture_dir.iterdir()]

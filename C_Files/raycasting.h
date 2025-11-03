@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "map.h"
 
-#define MAX_DEPTH (30)
+#define MAX_DEPTH (100)
 
 enum HitSide {
     TOP,

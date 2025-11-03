@@ -5,11 +5,11 @@ int map_height;
 
 uint8_t **curr_map;
 
-void set_map(int width, int height, uint8_t **map) {
+void set_map(int height, int width, uint8_t **map) {
     if (curr_map != NULL) { free(curr_map); }
 
-    map_width = width;
     map_height = height;
+    map_width = width;
 
     curr_map = malloc(height * sizeof(uint8_t *));
     for (int i = 0; i < height; i++) {

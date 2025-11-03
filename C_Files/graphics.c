@@ -13,7 +13,9 @@ double RAY_DELTA_ANGLE;
 int RAY_WIDTH_SCALE;
 double SCREEN_DISTANCE;
 
-void init_graphics_settings(int width, int height, int definition) {
+extern double *flat_light_mults;
+
+void init_graphics(int width, int height, int definition) {
     WIDTH = width;
     HEIGHT = height;
 
@@ -22,6 +24,15 @@ void init_graphics_settings(int width, int height, int definition) {
     RAY_DELTA_ANGLE = FOV / RAY_AMT;
     RAY_WIDTH_SCALE = width / RAY_AMT;
     SCREEN_DISTANCE = (width / 2) / tan(FOV / 2);
+
+    int num_light_mults = ((((height / 2) / definition) * (width / definition)) / definition);
+    flat_light_mults = malloc(num_light_mults * sizeof(double));
+    for (int i = 0; i < num_light_mults; i++) {
+        int dist_from_horizon = i * definition;
+        int flat_dist = (dist_from_horizon == 0) ? INFINITY : ((CAMERA_HEIGHT * SCREEN_DISTANCE) / dist_from_horizon);
+
+    }
+
 }
 
 static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int segments, int ray_offset, int proj_height, double ray_depth, int wall_tex_num, int ray_texture_offset) {
@@ -36,7 +47,7 @@ static inline void write_wall_slice(uint8_t *pixels, Point center_screen, int se
         double center_screen_dist = (pow((ray_offset - center_screen.x), 2) + pow((segment_offset - center_screen.y), 2));
         double light_mult = lighting_multiplier_func(center_screen_dist, ray_depth, MAX_LIGHT_DISTANCE);
 
-        int texture_offset_y = ((WALL_TEX_DIMENSIONS - 1) * ((i * LIGHT_SEG_SIZE) / (double)proj_height));
+        int texture_offset_y = round(((WALL_TEX_DIMENSIONS - 1) * ((i * LIGHT_SEG_SIZE) / (double)proj_height)));
         uint8_t color[COLOR_SIZE];
         get_tex_color(color, wall_tex_num, texture_offset_y, ray_texture_offset);
         uint8_t color_row[COLOR_SIZE * RAY_WIDTH_SCALE];
@@ -126,21 +137,24 @@ uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2]
             hit_prop = 1.0 - hit_prop;
         }
 
-        int ray_texture_offset = (WALL_TEX_DIMENSIONS - 1) * hit_prop;
+        int ray_texture_offset = round((WALL_TEX_DIMENSIONS - 1) * hit_prop);
+        int ray_offset = i * RAY_WIDTH_SCALE;
 
         if (ray.hit) {
             double corrected_ray_depth = ray.depth * cos(player_angle - curr_ray_angle);
-            int projection_height = (int)(SCREEN_DISTANCE / (corrected_ray_depth + 0.000001));
+            int projection_height = (int)(SCREEN_DISTANCE / (corrected_ray_depth + 0.00001));
             projection_height = (projection_height <= HEIGHT) ? projection_height : HEIGHT;
 
             int wall_segments = (int)projection_height / LIGHT_SEG_SIZE;
 
-            int ray_offset = i * RAY_WIDTH_SCALE;
             int projection_height_offset = (int)((HEIGHT - projection_height) / 2);
 
             write_wall_slice(pixels, center_screen, wall_segments, ray_offset, projection_height, corrected_ray_depth, ray.grid_val, ray_texture_offset);
             write_flat_slice(pixels, FLOOR_COLOR, center_screen, ray_offset, (int)(projection_height_offset + projection_height), (HEIGHT - 1));
             write_flat_slice(pixels, CEIL_COLOR, center_screen, ray_offset, 0, projection_height_offset);
+        } else {
+            write_flat_slice(pixels, FLOOR_COLOR, center_screen, ray_offset, (HEIGHT / 2), (HEIGHT - 1));
+            write_flat_slice(pixels, CEIL_COLOR, center_screen, ray_offset, 0, ((HEIGHT / 2) - 1));
         }
         curr_ray_angle += RAY_DELTA_ANGLE;
     }

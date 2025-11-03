@@ -20,6 +20,8 @@ extern double RAY_DELTA_ANGLE;
 extern int RAY_WIDTH_SCALE;
 extern double SCREEN_DISTANCE;
 
+extern double *flat_light_mults;
+
 typedef struct Color {
     uint8_t r;
     uint8_t g;
@@ -33,7 +35,7 @@ typedef struct ColorA {
     uint8_t a;
 } ColorA;
 
-void init_graphics_settings(int width, int height, int definition);
+void init_graphics(int width, int height, int definition);
 uint8_t* generate_pixels(const double player_pos[2], const int player_map_pos[2], double player_angle);
 void free_pixels(uint8_t *pixels);
 
