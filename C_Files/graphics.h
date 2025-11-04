@@ -8,7 +8,7 @@
 #include "lighting.h"
 #include "textures.h"
 
-#define FOV (M_PI / 3.0)
+#define FOV (M_PI / 2.5)
 #define CAMERA_HEIGHT 0.5
 
 extern int WIDTH;
