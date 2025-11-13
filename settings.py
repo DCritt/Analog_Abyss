@@ -1,7 +1,7 @@
 import math
 
 #screen settings
-RESOLUTION = WIDTH, HEIGHT = 2560, 1440
+RESOLUTION = WIDTH, HEIGHT = 1500, 700
 FPS = 60
 
 #3D projection settings

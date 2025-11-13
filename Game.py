@@ -76,7 +76,13 @@ class Game:
 
     def check_events(self):
         events = pygame.event.get()
-        self.scene.check_events(events)
+        for event in events:
+            if event.type == pygame.QUIT:
+                self.game.running = False
+                self.game.graphics_lib.free_map()
+                self.game.graphics_lib.free_textures()
+
+            self.scene.check_event(event)
 
     def draw(self):
         self.scene.draw()
