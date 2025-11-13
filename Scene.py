@@ -2,7 +2,7 @@ import pygame
 from player import Player
 from Camera import Camera
 from map_arrays import *
-from map import Map
+from Map import Map
 
 #Base Class
 class Scene:
@@ -49,6 +49,9 @@ class UIScene(Scene):
 
     def check_event(self, event):
         super().check_event(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_l:
+                self.game.load_scene(LevelScene(self.game, map1))
 
     def draw(self):
         super().draw()

@@ -1,7 +1,93 @@
 import pygame
 from settings import *
 import math
+from StateMachine import StateMachine, State
 
+#Base Player State Class
+class PlayerState(State):
+    def __init__(self, state_machine, player):
+        super().__init__(state_machine)
+        self.player = player
+
+    def update(self):
+        super().update()
+
+    def check_inputs(self):
+        super().check_inputs()
+
+    def check_event(self, event):
+        super().check_event(event)
+
+    def enter(self):
+        super().enter()
+
+    def exit(self):
+        super().exit()
+
+
+#Child Player State Classes
+
+#Child Player Idle State Class
+class PlayerIdleState(PlayerState):
+    def __init__(self, state_machine, player):
+        super().__init__(state_machine, player)
+
+    def update(self):
+        super().update()
+
+    def check_inputs(self):
+        super().check_inputs()
+
+    def check_event(self, event):
+        super().check_event(event)
+
+    def enter(self):
+        super().enter()
+
+    def exit(self):
+        super().exit()
+
+#Child Player Walk State Class
+class PlayerWalkState(PlayerState):
+    def __init__(self, state_machine, player):
+        super().__init__(state_machine, player)
+
+    def update(self):
+        super().update()
+
+    def check_inputs(self):
+        super().check_inputs()
+
+    def check_event(self, event):
+        super().check_event(event)
+
+    def enter(self):
+        super().enter()
+
+    def exit(self):
+        super().exit()
+
+#Child Player Sprint State Class
+class PlayerSprintState(PlayerState):
+    def __init__(self, state_machine, player):
+        super().__init__(state_machine, player)
+
+    def update(self):
+        super().update()
+
+    def check_inputs(self):
+        super().check_inputs()
+
+    def check_event(self, event):
+        super().check_event(event)
+
+    def enter(self):
+        super().enter()
+
+    def exit(self):
+        super().exit()
+
+#Player Class
 class Player:
     
     def __init__(self, scene):
