@@ -27,10 +27,6 @@ void init_graphics(int width, int height, int definition) {
 
 }
 
-static inline double get_flat_light_mult(int dist_from_horizon, int ray_offset) { 
-    return flat_light_mults[(((int)(dist_from_horizon / DEFINITION)) * (WIDTH / DEFINITION)) + (int)(ray_offset / DEFINITION)]; 
-}
-
 static inline void write_wall_slice(uint8_t *pixels, int segments, int ray_offset, int proj_height, double ray_depth, int wall_tex_num, int ray_texture_offset) {
     int proj_height_offset = (int)((HEIGHT - proj_height) / 2);
 

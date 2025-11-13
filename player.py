@@ -4,9 +4,10 @@ import math
 
 class Player:
     
-    def __init__(self, game):
-        self.game = game
-        self.lib = game.graphics_lib
+    def __init__(self, scene):
+        self.scene = scene
+        self.game = scene.game
+        self.lib = self.game.graphics_lib
         self.x, self.y = 1.5 , 1.5
         self.player_angle = 0
         self.player_size = 60
@@ -51,9 +52,9 @@ class Player:
 
     def check_wall_collision(self, dx, dy):
         player_size_scale = self.player_size / self.game.delta_time
-        if (int(self.x + dx * player_size_scale), int(self.y)) not in self.game.map.map_dic:
+        if (int(self.x + dx * player_size_scale), int(self.y)) not in self.scene.map.map_dic:
             self.x += dx
-        if (int(self.x), int(self.y + dy * player_size_scale)) not in self.game.map.map_dic:
+        if (int(self.x), int(self.y + dy * player_size_scale)) not in self.scene.map.map_dic:
             self.y += dy
 
     def draw(self):
