@@ -1,6 +1,6 @@
 import pygame
 import ctypes
-from map_arrays import _
+from src.data.map_arrays import _
 
 class Map:
     def __init__(self, game, map_arr, lib):

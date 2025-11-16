@@ -3,8 +3,6 @@ CC = gcc
 CFLAGS = -Wall -O2 -fPIC -c
 CFLAGS_DL = -shared -o
 
-OBJS := $(wildcard C_Files/*.o)
-
 all: compile run
 
 run:
@@ -13,34 +11,34 @@ run:
 compile: compile_linux compile_windows
 
 compile_linux: compile_graphics compile_raycasting compile_lighting compile_map compile_textures
-	$(CC) $(CFLAGS_DL) Object_Linker_Files/mygraphics.so Object_Linker_Files/*.o
+	$(CC) $(CFLAGS_DL) libs/graphics_lib/mygraphics.so libs/graphics_lib/*.o
 
 compile_windows: compile_graphics compile_raycasting compile_lighting compile_map compile_textures
-	$(CC) $(CFLAGS_DL) Object_Linker_Files/mygraphics.dll Object_Linker_Files/*.o
+	$(CC) $(CFLAGS_DL) libs/graphics_lib/mygraphics.dll libs/graphics_lib/*.o
 	
 compile_graphics:
-	$(CC) $(CFLAGS) C_Files/graphics.c -o Object_Linker_Files/graphics.o
+	$(CC) $(CFLAGS) src/c_modules/graphics.c -o libs/graphics_lib/graphics.o
 
 compile_raycasting:
-	$(CC) $(CFLAGS) C_Files/raycasting.c -o Object_Linker_Files/raycasting.o
+	$(CC) $(CFLAGS) src/c_modules/raycasting.c -o libs/graphics_lib/raycasting.o
 
 compile_lighting:
-	$(CC) $(CFLAGS) C_Files/lighting.c -o Object_Linker_Files/lighting.o
+	$(CC) $(CFLAGS) src/c_modules/lighting.c -o libs/graphics_lib/lighting.o
 
 compile_map:
-	$(CC) $(CFLAGS) C_Files/map.c -o Object_Linker_Files/map.o
+	$(CC) $(CFLAGS) src/c_modules/map.c -o libs/graphics_lib/map.o
 
 compile_textures:
-	$(CC) $(CFLAGS) C_Files/textures.c -o Object_Linker_Files/textures.o
+	$(CC) $(CFLAGS) src/c_modules/textures.c -o libs/graphics_lib/textures.o
 
 compile_linked_list:
-	$(CC) $(CFLAGS) C_Files/linked_list.c -o Object_Linker_Files/linked_list.o
+	$(CC) $(CFLAGS) src/c_modules/linked_list.c -o libs/graphics_lib/linked_list.o
 
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q Object_Linker_Files\*.o Object_Linker_Files\*.dll Object_Linker_Files\*.so
+	del /Q libs\graphics_lib\*.o libs\graphics_lib\*.dll libs\graphics_lib\*.so
 	cls
 else
-	rm -f Object_Linker_Files/*.o Object_Linker_Files/*.dll Object_Linker_Files/*.so
+	rm -f libs/graphics_lib/*.o libs/graphics_lib/*.dll libs/graphics_lib/*.so
 	clear
 endif
