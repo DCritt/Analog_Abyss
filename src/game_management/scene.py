@@ -1,8 +1,8 @@
 import pygame
 from src.entities.player_files.player import Player
-from src.game_mangement.camera import Camera
+from src.game_management.camera import Camera
 from src.data.map_arrays import *
-from Map import Map
+from src.game_management.map import Map
 
 #Base Class
 class Scene:
