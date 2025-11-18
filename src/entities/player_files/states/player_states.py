@@ -10,7 +10,7 @@ class PlayerState(State):
     def update(self, keys):
         pass
 
-    def check_inputs(self, keys):
+    def check_states(self, keys):
         pass
 
     def check_event(self, event):
@@ -36,7 +36,7 @@ class PlayerEnabledState(PlayerState):
 
     def check_event(self, event):
         if event.key == pygame.K_f:
-            self.player.lib.toggle_flashlight()
+            self.player.toggle_flashlight()
 
 #Child Player Idle State Class
 class PlayerIdleState(PlayerEnabledState):
@@ -47,9 +47,9 @@ class PlayerIdleState(PlayerEnabledState):
         rot_dir = self.player.get_rot_dir(keys)
         self.player.rotate(rot_dir)
 
-    def check_inputs(self, keys):
+    def check_states(self, keys):
         is_moving = (keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d])
-        is_sprinting = (keys[pygame.K_LSHIFT] and is_moving)
+        is_sprinting = (keys[pygame.K_LSHIFT] and is_moving and self.player.stamina > 0)
         
         if (is_sprinting):
             self.state_machine.change_state(self.player.sprint_state)
@@ -76,9 +76,9 @@ class PlayerWalkState(PlayerEnabledState):
         self.player.move(move_dir)
         self.player.rotate(rot_dir)
 
-    def check_inputs(self, keys):
+    def check_states(self, keys):
         is_moving = (keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d])
-        is_sprinting = (keys[pygame.K_LSHIFT])
+        is_sprinting = (keys[pygame.K_LSHIFT] and self.player.stamina > 0)
 
         if (not is_moving):
             self.state_machine.change_state(self.player.idle_state)
@@ -106,9 +106,9 @@ class PlayerSprintState(PlayerEnabledState):
         self.player.move(move_dir)
         self.player.rotate(rot_dir)
 
-    def check_inputs(self, keys):
+    def check_states(self, keys):
         is_moving = (keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d])
-        is_sprinting = (keys[pygame.K_LSHIFT])
+        is_sprinting = (keys[pygame.K_LSHIFT] and self.player.stamina > 0)
 
         if (not is_moving):
             self.state_machine.change_state(self.player.idle_state)
@@ -132,7 +132,7 @@ class PlayerDeadState(PlayerDisabledState):
     def update(self, keys):
         pass
 
-    def check_inputs(self, keys):
+    def check_states(self, keys):
         pass
 
     def check_event(self, event):

@@ -9,7 +9,7 @@ class State:
     def update(self):
         pass
 
-    def check_inputs(self):
+    def check_states(self):
         pass
 
     def check_event(self, event):

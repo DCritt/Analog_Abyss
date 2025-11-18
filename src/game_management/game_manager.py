@@ -33,6 +33,11 @@ class GameManager:
         ]
         self.graphics_lib.init_lighting_settings.argtypes = [
             ctypes.c_int,
+            ctypes.c_double,
+            ctypes.c_double
+        ]
+        self.graphics_lib.set_darkness.argtypes = [
+            ctypes.c_double,
             ctypes.c_double
         ]
         self.graphics_lib.set_map.argtypes = [
@@ -46,8 +51,11 @@ class GameManager:
             ctypes.c_int,
             ctypes.c_int
         ]
+        self.graphics_lib.set_flashlight.argtypes = [
+            ctypes.c_int
+        ]
 
-        self.graphics_lib.init_lighting_settings(HEIGHT, DARKNESS_MULTIPLIER)
+        self.graphics_lib.init_lighting_settings(HEIGHT, DARKNESS_MULTIPLIER, MAX_LIGHT_DISTANCE)
         self.graphics_lib.init_graphics(WIDTH, HEIGHT, DEFINITION)
 
         texture_dir = curr_dir / "assets" / "sprites" / "wall_textures"
@@ -69,7 +77,7 @@ class GameManager:
         self.scene = scene
 
     def update(self):
-        self.delta_time = self.clock.tick(FPS)
+        self.delta_time = self.clock.tick(FPS) / 1000
         pygame.display.set_caption(f'{self.clock.get_fps() :.1f}')
         self.scene.update()
         pygame.display.update()

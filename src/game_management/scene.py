@@ -3,6 +3,7 @@ from src.entities.player_files.player import Player
 from src.game_management.camera import Camera
 from src.data.map_arrays import *
 from src.game_management.map import Map
+from src.data.settings import *
 
 #Base Class
 class Scene:
@@ -47,12 +48,13 @@ class UIScene(Scene):
 
     def update(self):
         super().update()
+        self.ui.update()
 
     def check_event(self, event):
         super().check_event(event)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_l:
-                self.game.load_scene(LevelScene(self.game, map1))
+        self.ui.check_event(event)
 
     def draw(self):
         super().draw()
+        pygame.draw.rect(self.game.screen, (120, 120, 120), (0, 0, WIDTH, HEIGHT))
+        self.ui.draw(self.game.screen)

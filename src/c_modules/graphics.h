@@ -19,6 +19,7 @@ extern double RAY_DELTA_ANGLE;
 extern int RAY_WIDTH_SCALE;
 extern int DEFINITION;
 extern double SCREEN_DISTANCE;
+extern double FULLSCREEN_DISTANCE;
 extern Point CENTER_SCREEN;
 
 typedef struct Color {
