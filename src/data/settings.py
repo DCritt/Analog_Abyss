@@ -1,8 +1,12 @@
 import math
+import tkinter as tk
+
+root = tk.Tk()
+root.withdraw()
 
 #screen settings
 REFERENCE_WIDTH, REFERENCE_HEIGHT = 1920, 1080
-RESOLUTION = WIDTH, HEIGHT = 2560, 1440
+RESOLUTION = WIDTH, HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 SCALE_SIZE = min(WIDTH / REFERENCE_WIDTH, HEIGHT / REFERENCE_HEIGHT)
 FPS = 60
 

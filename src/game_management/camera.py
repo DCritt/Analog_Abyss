@@ -1,7 +1,6 @@
 import pygame
 import ctypes
 import numpy as np
-from src.data.settings import *
 
 class Camera:
     def __init__(self, game, entity):
@@ -10,6 +9,7 @@ class Camera:
         self.lib = game.graphics_lib
 
     def draw_view(self):
+        from src.data.settings import HEIGHT, WIDTH
         entity_pos = (ctypes.c_double * 2)(self.entity.x, self.entity.y)
         entity_map_pos = (ctypes.c_int * 2)(self.entity.map_pos[0], self.entity.map_pos[1])
 
