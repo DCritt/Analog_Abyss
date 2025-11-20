@@ -86,13 +86,12 @@ class GameManager:
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                self.running = False
-                self.graphics_lib.free_map()
-                self.graphics_lib.free_textures()
+                self.quit_game()
 
             self.scene.check_event(event)
 
     def draw(self):
+        self.screen.fill((0, 0, 0))
         self.scene.draw()
 
     def run(self):
@@ -100,3 +99,8 @@ class GameManager:
             self.update()
             self.check_events()
             self.draw()
+
+    def quit_game(self):
+        self.running = False
+        self.graphics_lib.free_map()
+        self.graphics_lib.free_textures()

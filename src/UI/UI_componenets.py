@@ -2,22 +2,37 @@ import pygame
 from src.data.settings import *
 
 class UIComponent:
-    def __init__(self, x_p, y_p, width_p, height_p):
+    def __init__(self, x_p, y_p, width_p, height_p, active):
         self.parent = None
-        self.visible = True
-        self.active = True
+        self.active = active
         
         self.x_p = x_p
         self.y_p = y_p
         self.width_p = width_p
         self.height_p = height_p
+        self.rect = pygame.Rect(0, 0, 0, 0)
         self.center_rect()
 
+    def safe_update(self):
+        if not self.active:
+            return
+        self.update()
+        
     def update(self):
         pass
 
+    def safe_check_event(self, event):
+        if not self.active:
+            return
+        return self.check_event(event)
+
     def check_event(self, event):
         pass
+
+    def safe_draw(self, surface):
+        if not self.active:
+            return
+        self.draw(surface)
 
     def draw(self, surface):
         pass
@@ -70,9 +85,11 @@ class UIComponent:
         return (WIDTH, HEIGHT) if not self.parent else (self.parent.rect.width, self.parent.rect.height)
 
 class UIPanel(UIComponent):
-    def __init__(self, x_p, y_p, width_p, height_p, children=None):
-        super().__init__(x_p, y_p, width_p, height_p)
-        
+    def __init__(self, x_p, y_p, width_p, height_p, color=(0, 0, 0, 0), children=None, active=True):
+        super().__init__(x_p, y_p, width_p, height_p, active)
+
+        self.color = color
+
         self.children = children if children is not None else []
         for child in self.children:
             child.set_parent(self)
@@ -81,16 +98,19 @@ class UIPanel(UIComponent):
 
     def update(self):
         for child in self.children:
-            child.update()
+            child.safe_update()
 
     def check_event(self, event):
         for child in self.children:
-            child.check_event(event)
+            if child.safe_check_event(event):
+                return True
+        return False
 
     def draw(self, surface):
         self.surface.fill((0, 0, 0, 0))
+        self.surface.fill(self.color)
         for child in self.children:
-            child.draw(self.surface)
+            child.safe_draw(self.surface)
         surface.blit(self.surface, (self.rect.x, self.rect.y))
 
     def update_rect(self):
@@ -113,8 +133,13 @@ class UIPanel(UIComponent):
         self.children.append(child)
         child.set_parent(self)
 
+    def add_children(self, children):
+        for child in children:
+            self.children.append(child)
+            child.set_parent(self)
+
 class UILabel(UIComponent):
-    def __init__(self, x_p, y_p, text, font_size, color):
+    def __init__(self, x_p, y_p, text, font_size, color, active=True):
         self.parent = None
 
         self.text = text
@@ -125,7 +150,7 @@ class UILabel(UIComponent):
 
         width_p = self.surface.get_width() / WIDTH
         height_p = self.surface.get_height() / HEIGHT
-        super().__init__(x_p, y_p, width_p, height_p)
+        super().__init__(x_p, y_p, width_p, height_p, active)
 
     def update(self):
         pass
@@ -136,14 +161,33 @@ class UILabel(UIComponent):
     def draw(self, surface):
         surface.blit(self.surface, (self.rect.x, self.rect.y))
 
+    def center_rect(self):
+        parent_dim = self.get_parent_dim()
+
+        width = self.rect.width
+        height = self.rect.height
+
+        x = ((self.x_p * parent_dim[0]) - (width // 2))
+        x = x if x >= 0 else 0
+        x = x if x <= (parent_dim[0] - width) else (parent_dim[0] - width)
+
+        y = ((self.y_p * parent_dim[1]) - (height // 2))
+        y = y if y >= 0 else 0
+        y = y if y <= (parent_dim[1] - height) else (parent_dim[1] - height)
+
+        self.rect = pygame.Rect(x, y, width, height)
+
     def update_rect(self):
         self.font = self.get_valid_font(self.get_parent_dim())
+        self.rect.width = self.surface.get_width()
+        self.rect.height = self.surface.get_height()
         self.surface = self.font.render(self.text, True, self.color)
+        self.center_rect()
 
 
 class UIButton(UIComponent):
-    def __init__(self, x_p, y_p, width_p, height_p, text, font_size, font_color, color, func):
-        super().__init__(x_p, y_p, width_p, height_p)
+    def __init__(self, x_p, y_p, width_p, height_p, text, font_size, font_color, color, func, active=True):
+        super().__init__(x_p, y_p, width_p, height_p, active)
 
         self.text = text
         self.font_size = font_size
@@ -165,6 +209,8 @@ class UIButton(UIComponent):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and self.hovered:
                 self.func()
+                return True
+        return False
 
     def draw(self, surface):
         pygame.draw.rect(surface, (self.color if not self.hovered else self.hover_color), self.rect)
@@ -178,8 +224,8 @@ class UIButton(UIComponent):
         self.font_surface = self.font.render(self.text, True, self.font_color)
 
 class UIImage(UIComponent):
-    def __init__(self, x_p, y_p, width_p, height_p, image_path):
-        super().__init__(x_p, y_p, width_p, height_p)
+    def __init__(self, x_p, y_p, width_p, height_p, image_path, active=True):
+        super().__init__(x_p, y_p, width_p, height_p, active)
 
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, ((int)(width_p * WIDTH), (int)(height_p * HEIGHT)))
