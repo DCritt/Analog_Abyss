@@ -3,6 +3,8 @@ import platform
 import pathlib as Path
 import ctypes
 from src.data.settings import *
+from src.audio.audio_manager import AudioManager
+from src.image.image_manager import ImageManager
 
 class GameManager:
     def __init__(self):
@@ -72,6 +74,12 @@ class GameManager:
         c_file_paths = path_type(*[ctypes.cast(buf, ctypes.POINTER(ctypes.c_char)) for buf in c_file_paths_array])
 
         self.graphics_lib.init_textures(c_file_paths, num_paths, 64)
+
+        self.audio_manager = AudioManager()
+        self.audio_manager.init_sounds(curr_dir)
+
+        self.image_manager = ImageManager()
+        self.image_manager.init_images(curr_dir)
 
     def load_scene(self, scene):
         self.scene = scene

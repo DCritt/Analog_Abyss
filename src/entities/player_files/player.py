@@ -3,6 +3,7 @@ from src.data.settings import *
 import math
 from src.entities.entity import Entity
 from src.entities.player_files.states.player_states import PlayerIdleState, PlayerWalkState, PlayerSprintState, PlayerDeadState
+from src.UI.UI_screens.player_interface import PlayerInterface
 
 #Player Class
 class Player(Entity):
@@ -28,12 +29,16 @@ class Player(Entity):
 
         self.max_sanity = 100.0
         self.sanity = self.max_stamina
-        self.flashlight_sanity_drain = 0.2
+        self.flashlight_sanity_drain = 0.25
 
         self.max_battery = 100.0
         self.battery = self.max_battery
         self.flashlight_on = True
-        self.flashlight_drain = 0.2
+        self.flashlight_drain = 0.25
+        
+        self.footstep_effects = ["low_step", "med_step", "high_step"]
+
+        self.player_ui = PlayerInterface(self.game, self)
         
 
     def update(self):
@@ -43,10 +48,12 @@ class Player(Entity):
         self.update_sanity()
         self.state_machine.state.check_states(keys)
         self.state_machine.state.update(keys)
+        self.player_ui.update()
         
 
     def event_update(self, event):
         self.state_machine.state.check_event(event)
+        self.player_ui.check_event(event)
 
     def get_move_dir(self, keys):
         sin = math.sin(self.angle)
@@ -102,6 +109,10 @@ class Player(Entity):
         else:
             self.flashlight_on = False
             self.lib.set_flashlight(False)
+
+    def draw_ui(self, surface):
+        self.player_ui.draw(surface)
+        pass
 
     def draw_2d(self):
         pygame.draw.circle(self.game.screen, 'blue', (self.x * 100, self.y * 100), 20)

@@ -1,5 +1,6 @@
 import pygame
 from src.state_management.state import State
+import random
 
 #Base Player State Class
 class PlayerState(State):
@@ -69,12 +70,15 @@ class PlayerIdleState(PlayerEnabledState):
 class PlayerWalkState(PlayerEnabledState):
     def __init__(self, state_machine, player):
         super().__init__(state_machine, player)
+        self.footstep_timer = 0.0
+        self.footstep_interval = 0.55
 
     def update(self, keys):
         move_dir = self.player.get_move_dir(keys)
         rot_dir = self.player.get_rot_dir(keys)
         self.player.move(move_dir)
         self.player.rotate(rot_dir)
+        self.update_footstep()
 
     def check_states(self, keys):
         is_moving = (keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d])
@@ -94,17 +98,28 @@ class PlayerWalkState(PlayerEnabledState):
     def exit(self):
         pass
 
+    def update_footstep(self):
+        self.footstep_timer += self.player.game.delta_time
+        if (self.footstep_timer >= self.footstep_interval):
+            vol = random.uniform(0.15, 0.3)
+            foot_index = random.randint(0, 2)
+            self.player.game.audio_manager.play_sound(self.player.footstep_effects[foot_index], vol)
+            self.footstep_timer = 0.0
+
 #Child Player Sprint State Class
 class PlayerSprintState(PlayerEnabledState):
     def __init__(self, state_machine, player):
         super().__init__(state_machine, player)
         self.speed_mult = 1.5
+        self.footstep_timer = 0.0
+        self.footstep_interval = 0.38
 
     def update(self, keys):
         move_dir = self.player.get_move_dir(keys)
         rot_dir = self.player.get_rot_dir(keys)
         self.player.move(move_dir)
         self.player.rotate(rot_dir)
+        self.update_footstep()
 
     def check_states(self, keys):
         is_moving = (keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d])
@@ -123,6 +138,14 @@ class PlayerSprintState(PlayerEnabledState):
 
     def exit(self):
         pass
+
+    def update_footstep(self):
+        self.footstep_timer += self.player.game.delta_time
+        if (self.footstep_timer >= self.footstep_interval):
+            vol = random.uniform(0.2, 0.35)
+            foot_index = random.randint(0, 2)
+            self.player.game.audio_manager.play_sound(self.player.footstep_effects[foot_index], vol)
+            self.footstep_timer = 0.0
 
 #Child Player Dead State Class
 class PlayerDeadState(PlayerDisabledState):

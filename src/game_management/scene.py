@@ -4,7 +4,7 @@ from src.game_management.camera import Camera
 from src.data.map_arrays import *
 from src.game_management.map import Map
 from src.data.settings import *
-from src.data.UI_elements import create_pause_menu
+from src.UI.UI_screens.pause_menu import PauseMenu
 
 #Base Class
 class Scene:
@@ -22,45 +22,49 @@ class Scene:
 
 #Child Classes
 class LevelScene(Scene):
-    def __init__(self, game, map):
+    def __init__(self, game, map, ambient_name):
         super().__init__(game)
         self.map = Map(game, map, game.graphics_lib)
         player_pos = (1.5, 1.5)
         self.player = Player(self, player_pos)
         self.camera = Camera(game, self.player)
-        self.pause_menu = create_pause_menu(game)
+        self.pause_menu = PauseMenu(game)
+        self.pause_menu.active = False
+        self.game.audio_manager.play_music(ambient_name, 0.2)
 
     def update(self):
         super().update()
         self.player.update()
-        self.pause_menu.safe_update()
+        self.pause_menu.update()
 
     def check_event(self, event):
         super().check_event(event)
-        self.pause_menu.safe_check_event(event)
+        self.pause_menu.check_event(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.pause_menu.children[0].active = not self.pause_menu.children[0].active
+                self.pause_menu.active = not self.pause_menu.active
             self.player.event_update(event)
 
     def draw(self):
         super().draw()
         self.camera.draw_view()
-        self.pause_menu.safe_draw(self.game.screen)
+        self.pause_menu.draw(self.game.screen)
+        self.player.draw_ui(self.game.screen)
 
 class UIScene(Scene):
-    def __init__(self, game, ui):
+    def __init__(self, game, ui, music_name):
         super().__init__(game)
         self.ui = ui
+        self.game.audio_manager.play_music(music_name, 0.3)
 
     def update(self):
         super().update()
-        self.ui.safe_update()
+        self.ui.update()
 
     def check_event(self, event):
         super().check_event(event)
-        self.ui.safe_check_event(event)
+        self.ui.check_event(event)
 
     def draw(self):
         super().draw()
-        self.ui.safe_draw(self.game.screen)
+        self.ui.draw(self.game.screen)
