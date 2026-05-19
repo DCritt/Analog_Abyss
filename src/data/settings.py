@@ -11,7 +11,7 @@ SCALE_SIZE = min(WIDTH / REFERENCE_WIDTH, HEIGHT / REFERENCE_HEIGHT)
 FPS = 60
 
 #3D projection settings
-DEFINITION = 6
+DEFINITION = 4
 MAX_DEPTH = 30
 
 #lighting settings
