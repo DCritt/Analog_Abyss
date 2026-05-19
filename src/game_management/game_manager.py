@@ -61,12 +61,12 @@ class GameManager:
         self.graphics_lib.init_graphics(WIDTH, HEIGHT, DEFINITION)
 
         texture_dir = curr_dir / "assets" / "sprites" / "wall_textures"
-        file_paths = [file for file in texture_dir.iterdir()]
+        file_paths = [str(texture_dir / "metal.ppm"), str(texture_dir / "electric.ppm")]
         num_paths = len(file_paths)
 
         c_file_paths_array = []
         for file in file_paths:
-            file_path = str(file).encode('utf-8') + b'\0'
+            file_path = file.encode('utf-8') + b'\0'
             buf = ctypes.create_string_buffer(file_path)
             c_file_paths_array.append(buf)
 

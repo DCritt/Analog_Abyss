@@ -64,7 +64,8 @@ class Player(Entity):
 
         dir = pygame.Vector2((inp_x * sin) + (inp_y * cos), (inp_y * sin) - (inp_x * cos))
 
-        dir = dir.normalize()
+        if dir.length() != 0:
+            dir = dir.normalize()
 
         return dir
     
