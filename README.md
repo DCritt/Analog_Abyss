@@ -44,15 +44,10 @@
 ## Screenshots
 
 ### Main Environment
+
 ![Screenshot](assets/screenshots/Screenshot%202026-05-19%20131158.png)
 
 ![Screenshot](assets/screenshots/Screenshot%202026-05-19%20131138.png)
-
----
-
-## Trailer / Gameplay Video
-
-[Watch the Gameplay Trailer](LINK_HERE)
 
 ---
 
