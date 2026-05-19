@@ -24,16 +24,29 @@
 
 ---
 
+## Requirements
+
+- Python Installation
+- Pygame Installation
+- Make Installation
+- Windows or Linux
+
+---
+
+## How to Run
+
+- make clean
+- make compile
+- make run
+
+--- 
+
 ## Screenshots
 
 ### Main Environment
-![Screenshot](images/screenshot1.png)
+![Screenshot](assets/screenshots/Screenshot%202026-05-19%20131158.png)
 
-### Gameplay
-![Screenshot](images/screenshot2.png)
-
-### Enemy / Atmosphere
-![Screenshot](images/screenshot3.png)
+![Screenshot](assets/screenshots/Screenshot%202026-05-19%20131138.png)
 
 ---
 
