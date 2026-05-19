@@ -1,33 +1,119 @@
-David Crittendon
+# Analog Abyss
 
-Developed Items(Milestone 2)
-    * Character movement
-    * Graphics proccessing library 
-        * lighting.c
-        * raycasting.c
-        * map.c
-        * graphics.c
-    * Simple map
-    * Simple sprites (not fully done)
+> Analog Abyss is a first person analog horror game where you are trapped inside of a dream and must escape various analog horror entities.
 
-Developed Items(Milestone 3)
-    * Player System
-        * Player State Machine
-            * States (Idle, Walk, Sprint)
-        * Player Stamina
-            * Stamina is used when sprinting, regenerates after a delay
-        * Player Sanity
-            * Linked to maximum view distance and darkness multiplier
-        * Player Battery
-            * When the players flashlight is out of battery they lose sanity
-    * UI
-        * UI Components (Not even close to done, ran out of time)
-            * UIPanel
-            * UILabel
-            * UIButton
-            * UIImage
-    * Scene Management
-        * Game Manager
-        * Scenes
-            * UI Scenes
-            * Level Scenes
+---
+
+## Gameplay Overview
+
+- Locate a means for escaping each level.
+- Avoid the entity
+- Complete level puzzles/objectives
+- Manage battery and sanity
+
+---
+
+## Features
+
+- First-person player controller
+- Custom c graphics library
+- Battery and sanity system
+- Array based map construction
+- Audio ambience and sound effects
+- Custom UI system
+
+---
+
+## Screenshots
+
+### Main Environment
+![Screenshot](images/screenshot1.png)
+
+### Gameplay
+![Screenshot](images/screenshot2.png)
+
+### Enemy / Atmosphere
+![Screenshot](images/screenshot3.png)
+
+---
+
+## Trailer / Gameplay Video
+
+[Watch the Gameplay Trailer](LINK_HERE)
+
+---
+
+## Technologies Used
+- Languages: C, Python
+- Version Control: Git / GitHub
+- Pixel Art: Aseprite
+- Audio: Created via Audacity
+- UI: Custom UI system
+
+---
+
+## Controls
+
+| Action | Key |
+|---|---|
+| Move | WASD |
+| Sprint | Shift |
+| Look | Arrow Keys |
+| Interact | E |
+| Pause | ESC |
+| Flashlight | F |
+
+---
+
+## Development Challenges
+
+- Performance issues related to graphics library
+- Single CPU core processing
+- Efficient Lighting
+- UI Performance
+- Time Constraint
+
+---
+
+## What I Learned
+
+- How to create raycasted 3 dimensional graphics
+- How to utilize a custom c library
+- Optimization techniques
+- State Machines
+- Multiprocessing
+
+---
+
+## Future Improvements
+
+- Additional levels
+- Entity Implementation
+- 3D Audio
+- Advanced save system
+- Additional puzzle mechanics
+
+---
+
+## Known Issues
+
+- Performance issues with graphics library
+- Performance issues with UI system
+- No entity implementation
+- Lack of content
+- Seperation of concerns issues
+
+---
+
+## Credits
+
+### Developer
+- David Crittendon
+
+### Assets
+- Art — David Crittendon, Louis Trapnel
+- Sounds — David Crittendon
+- Ambient Music - David Crittendon
+
+### Special Thanks
+- Louis Trapnel - art assistance and playtesting
