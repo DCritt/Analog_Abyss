@@ -113,7 +113,7 @@
 ### Assets
 - Art — David Crittendon, Louis Trapnel
 - Sounds — David Crittendon
-- Ambient Music - David Crittendon
+- Ambient Music — David Crittendon
 
 ### Special Thanks
 - Louis Trapnel - art assistance and playtesting
